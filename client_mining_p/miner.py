@@ -2,10 +2,23 @@ import hashlib
 import requests
 
 import sys
-
+import json
 
 # TODO: Implement functionality to search for a proof 
 
+def proof_of_work(block):
+    block_string = json.dumps(block, sort_keys=True).encode()
+
+    proof = 0
+    while valid_proof(block_string, proof) is False:
+        proof += 1
+
+    return proof
+
+def valid_proof(block_string, proof):
+    guess = f'{block_string}{proof}'.encode()
+    guess_hash = hashlib.shae256(guess).hexdigest()
+    return guess_hash[:5] == "00000"
 
 if __name__ == '__main__':
     # What node are we interacting with?
